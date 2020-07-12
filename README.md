@@ -2,10 +2,10 @@
 Open Source Mutliplayer Hexagon with a twist.
 
 ## Multiplayer
-This time you won't play alone, you get to play against your friends.
+Play against your friends!
 
 ## Super Powers
-Make sure to grab those super powers to secure your victory.
+Use super powers to secure your victory.
 
 ## Developement:
 - **B96674** Milen Rodríguez
