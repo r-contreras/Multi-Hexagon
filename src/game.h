@@ -35,7 +35,7 @@ private:
     bool playerLost;
     int playerRadius;
     //player score
-    QGraphicsTextItem* score;
+    QGraphicsTextItem* scoreTextBox;
     int playerScore;
     //spawn rate
     int spawnrate;
@@ -44,6 +44,8 @@ private:
 
 public:
     Game();
+
+    ~Game();
 
     void run();
 

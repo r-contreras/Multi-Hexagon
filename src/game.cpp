@@ -1,7 +1,23 @@
 #include "game.h"
 Game::Game()
-    : spawnTimer(nullptr), scoreTimer(nullptr), playerLost(false), playerRadius(10), playerScore(0), spawnrate(1000)
+    : scene(nullptr)
+    , center(nullptr), player(nullptr)
+    , spawnTimer(nullptr), scoreTimer(nullptr), musicTimer(nullptr)
+    , backgroundMusic(nullptr)
+    , playerLost(false)
+    , playerRadius(10), playerScore(0), spawnrate(1000)
 {}
+
+Game::~Game()
+{
+    delete scene;
+    delete center;
+    delete player;
+    delete spawnTimer;
+    delete scoreTimer;
+    delete musicTimer;
+    delete backgroundMusic;
+}
 
 void Game::run()
 {
@@ -28,11 +44,13 @@ void Game::initScene()
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    /*
     //Pintar las lineas del centro
     QGraphicsLineItem* vertical = new QGraphicsLineItem(width()/2,0,width()/2,height());
     QGraphicsLineItem* horizontal = new QGraphicsLineItem(0,height()/2,width(),height()/2);
     scene->addItem(vertical);
     scene->addItem(horizontal);
+    */
 
     //Anhadir los principales actores (centro y jugador)
     addActors();
@@ -54,8 +72,8 @@ void Game::addActors()
     scene->addItem(player);
 
     //Crear/ubicar el score
-    score = new QGraphicsTextItem();
-    scene->addItem(score);
+    scoreTextBox = new QGraphicsTextItem();
+    scene->addItem(scoreTextBox);
 
     //Hacer el jugador focusable (para que reaccione a los key press)
     player->setFlag(QGraphicsItem::ItemIsFocusable);
@@ -88,9 +106,9 @@ void Game::initTimers()
 void Game::initScore()
 {
     //Se establece el font y color del score
-    score->setDefaultTextColor(Qt::magenta);
-    score->QGraphicsTextItem::setFont(QFont("Helvetica",16));
-    score->setTextWidth(200);
+    scoreTextBox->setDefaultTextColor(Qt::magenta);
+    scoreTextBox->QGraphicsTextItem::setFont(QFont("Helvetica",16));
+    scoreTextBox->setTextWidth(200);
 }
 
 void Game::initBackgroundMusicPlayer()
@@ -115,6 +133,6 @@ void Game::spawnEnemy()
 
 void Game::printScore()
 {
-    score->setPlainText("Score : " + QString::number(playerScore)); //Se inicia en 0
-    score->setPos(scene->width()/2 - (score->textWidth()/3), scene->height()/8);
+    scoreTextBox->setPlainText("Score : " + QString::number(playerScore)); //Se inicia en 0
+    scoreTextBox->setPos(scene->width()/2 - (scoreTextBox->textWidth()/3), scene->height()/8);
 }
