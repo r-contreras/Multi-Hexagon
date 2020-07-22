@@ -1,5 +1,5 @@
 # Multi-Hexagon
-Open Source Mutliplayer Hexagon with a twist.
+Open Source Hexagon with a twist.
 
 ## Super Powers
 Use super powers to achieve a higher score!
