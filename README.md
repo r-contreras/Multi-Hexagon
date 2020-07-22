@@ -1,11 +1,8 @@
 # Multi-Hexagon
 Open Source Mutliplayer Hexagon with a twist.
 
-## Multiplayer
-Play against your friends!
-
 ## Super Powers
-Use super powers to secure your victory.
+Use super powers to achieve a higher score!
 
 ## Developement:
 - **B96674** Milen Rodríguez
