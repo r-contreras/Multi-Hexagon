@@ -11,7 +11,7 @@ Enemy::Enemy(int closingSpeed, int width, int height, int angle, int& playerScor
 
     //Set random color and its width
     color = QPen(QColor::colorNames()[rand() % QColor::colorNames().size()]);
-    if(color.color() == Qt::black)
+    if(color.color().lightnessF() < 0.3)
         color.setColor(Qt::white);
     color.setWidth(2);
 }

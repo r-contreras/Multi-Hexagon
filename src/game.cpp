@@ -95,8 +95,7 @@ void Game::initTimers()
     enemiesRandomnessUpdater = new QTimer();
 
     //Since it will be called after 10 seconds, we create a random closing speed at run.
-    enemiesClosingSpeed = lastClosingSpeed = (rand() % 10) + 5;
-
+    enemiesClosingSpeed = lastClosingSpeed = 5;
     //Create a timer for background music
     musicTimer = new QTimer();
 
@@ -117,7 +116,7 @@ void Game::initTimers()
 
 void Game::updateEnemiesRandomness()
 {
-    int spawnIntervals[] = {750,1000,1250,1500};
+    int spawnIntervals[] = {500,750,1000,1250,1500};
 
     spawnTimer->start( spawnIntervals[rand()%3]);
 
