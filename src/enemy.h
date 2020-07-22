@@ -12,11 +12,14 @@ class Enemy : public QObject, public QGraphicsEllipseItem
 {
     Q_OBJECT
 private:
+    QTimer* internalTimer;
     float speed;
     int& playerScore; //referencia al score que tiene que modificar
     bool& playerLost; //referencia para modificar si el jugador ya perdio
 public:
     Enemy(int angle, int& playerScore, bool& playerLost);
+
+    ~Enemy();
 
     void resize();
 };

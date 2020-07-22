@@ -1,15 +1,20 @@
 #include "enemy.h"
 //quitar este include
-Enemy::Enemy(int angle, int& playerScore, bool& playerLost) : speed(2), playerScore(playerScore), playerLost(playerLost)
+Enemy::Enemy(int angle, int& playerScore, bool& playerLost) : internalTimer(nullptr), speed(2), playerScore(playerScore), playerLost(playerLost)
 {
     this->setRect(0,0,600,600);
     this->setStartAngle(angle);
     this->setSpanAngle(315*16);
 
     //Conectar al timer
-    QTimer* timer = new QTimer();
-    connect(timer,&QTimer::timeout,this,&Enemy::resize);
-    timer->start(5);
+    internalTimer = new QTimer();
+    connect(internalTimer,&QTimer::timeout,this,&Enemy::resize);
+    internalTimer->start(5);
+}
+
+Enemy::~Enemy()
+{
+    delete internalTimer;
 }
 
 void Enemy::resize()
