@@ -1,12 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-
+//std
 #include <math.h>
+//Qt
 #include <QGraphicsEllipseItem>
 #include <QKeyEvent>
-#include <QDebug>
-#include <QtMath>
 #include <QTimer>
+#include <QtMath>
 #include <QObject>
 
 class Player : public QObject, public QGraphicsEllipseItem
@@ -25,7 +25,6 @@ private:
     int moveDirection = 0;//-1 izquierda, 1 derecha
 public:
     Player(float posX,float posY);
-
 
     void keyPressEvent(QKeyEvent* event);
 

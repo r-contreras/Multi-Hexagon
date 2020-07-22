@@ -7,13 +7,13 @@
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QTimer>
-#include <QString>
 #include <QMediaPlayer>
-//Headers
+#include <QString>
+#include <QTimer>
+//Proyect headers
 #include "centercircle.h"
-#include "player.h"
 #include "enemy.h"
+#include "player.h"
 
 class Game : public QGraphicsView
 {
@@ -40,7 +40,7 @@ private:
     //spawn rate
     int spawnrate;
 
-    friend class Enemy;
+    friend class Enemy; //Modifies spawn timer, needs to know if it collides with player to update de lost boolean
 
 public:
     Game();
@@ -63,7 +63,9 @@ public:
 
     void spawnEnemy(); //Spawns one enemy into the scene
 
-    void printScore(); //Prints current socre value
+    void updateScore(); //Updates current score value
+
+    void displayLostMessage();
 };
 
 #endif // GAME_H

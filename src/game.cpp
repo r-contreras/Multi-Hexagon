@@ -1,4 +1,5 @@
 #include "game.h"
+
 Game::Game()
     : scene(nullptr)
     , center(nullptr), player(nullptr)
@@ -99,7 +100,7 @@ void Game::initTimers()
 
     //Se conectan los timers a sus subrutinas respectivas
     QObject::connect(spawnTimer, &QTimer::timeout, this, &Game::spawnEnemy);
-    QObject::connect(scoreTimer, &QTimer::timeout, this, &Game::printScore);
+    QObject::connect(scoreTimer, &QTimer::timeout, this, &Game::updateScore);
     QObject::connect(musicTimer, &QTimer::timeout, this, &Game::playBackgroundMusic);
 }
 
@@ -131,8 +132,24 @@ void Game::spawnEnemy()
     scene->addItem(newEnemy);
 }
 
-void Game::printScore()
+void Game::updateScore()
 {
     scoreTextBox->setPlainText("Score : " + QString::number(playerScore)); //Se inicia en 0
-    scoreTextBox->setPos(scene->width()/2 - (scoreTextBox->textWidth()/3), scene->height()/8);
+    scoreTextBox->setPos(scene->width()/2 - (scoreTextBox->textWidth()/4), scene->height()/8);
+
+    if(playerLost)
+    {
+        //Parar los timers
+        scoreTimer->stop();
+        spawnTimer->stop();
+        //Parar la musica
+        backgroundMusic->stop();
+        displayLostMessage();
+
+    }
+}
+
+void Game::displayLostMessage()
+{
+    //rip
 }

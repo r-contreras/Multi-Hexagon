@@ -46,6 +46,7 @@ void Enemy::resize()
                 death->play();
                 delete colliding_items[object];
                 delete this;
+
             }
         }
     }
