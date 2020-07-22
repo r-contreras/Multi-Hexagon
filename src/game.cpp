@@ -107,8 +107,10 @@ void Game::initTimers()
 void Game::initScore()
 {
     //Se establece el font y color del score
-    scoreTextBox->setDefaultTextColor(Qt::magenta);
-    scoreTextBox->QGraphicsTextItem::setFont(QFont("Helvetica",16));
+    scoreTextBox->setDefaultTextColor(QColor(245,185,103));
+    QFont font("Helvetica",16);
+    font.setCapitalization(QFont::AllUppercase);
+    scoreTextBox->setFont(font);
     scoreTextBox->setTextWidth(200);
 }
 
@@ -145,6 +147,9 @@ void Game::updateScore()
         //Parar la musica
         backgroundMusic->stop();
         displayLostMessage();
+        //Escribir Lost
+        scoreTextBox->setDefaultTextColor(Qt::red);
+        scoreTextBox->setPlainText("You Lost");
 
     }
 }

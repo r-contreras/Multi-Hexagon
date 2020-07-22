@@ -13,6 +13,8 @@ class Player : public QObject, public QGraphicsEllipseItem
 {
     Q_OBJECT
 private:
+    QTimer* moveUpdater;
+
     float posX,posY;
 
     float angle;
@@ -22,6 +24,7 @@ private:
     float speed = 0.05f;
 
     bool isMoving = false;
+
     int moveDirection = 0;//-1 izquierda, 1 derecha
 public:
     Player(float posX,float posY);

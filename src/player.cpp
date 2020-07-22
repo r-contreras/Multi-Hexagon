@@ -1,14 +1,14 @@
 #include "player.h"
-#include <QDebug>
+
 Player::Player(float posX, float posY)
-    :posX(posX),posY(posY),angle(-20)
+    : moveUpdater(nullptr), posX(posX),posY(posY),angle(-20)
 {
     this->setRect(posX,posY,10,10);
     setPos(offset*qCos(angle),offset*qSin(angle));
     this->setSpanAngle(360*16);
 
     //Timer for updating playerMovement
-    QTimer* moveUpdater = new QTimer();
+    moveUpdater = new QTimer();
     connect(moveUpdater, &QTimer::timeout, this, &Player::updateMovement);
     moveUpdater->start(10); //Se actualiza cada 5ms
 }
@@ -32,13 +32,7 @@ void Player::keyPressEvent(QKeyEvent *event)
 
 void Player::keyReleaseEvent(QKeyEvent *event)
 {
-    if(event->key() == Qt::Key_Left)
-    {
-        isMoving = false;
-    }
-
-
-    if(event->key() == Qt::Key_Right)
+    if(event->key() == Qt::Key_Left || event->key() == Qt::Key_Right)
     {
         isMoving = false;
     }
@@ -46,7 +40,6 @@ void Player::keyReleaseEvent(QKeyEvent *event)
 
 void Player::updateMovement()
 {
-    qDebug() << "Angle: " << angle;
     if(isMoving)
     {
         angle+= moveDirection * speed;
