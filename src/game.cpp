@@ -1,44 +1,120 @@
 #include "game.h"
-#include <QDebug>
 Game::Game()
-    : playerLost(false), spawnrate(1000), playerScore(0)
+    : spawnTimer(nullptr), scoreTimer(nullptr), playerLost(false), playerRadius(10), playerScore(0), spawnrate(1000)
+{}
+
+void Game::run()
 {
-    //Se crea un timer para todo el juego
-    QTimer* spawnTimer = new QTimer();
-    //Se conecta el timer con la funcion de agregar enemigos spawnEnemy()
-    connect(spawnTimer, &QTimer::timeout, this, &Game::spawnEnemy);
-    spawnTimer->start(spawnrate); //spawnrate esta definido, es cada cuanto se genera un enemigo.
+    //Se inicia la escena
+    initScene();
+    //Se inicia el score (font,size,width)
+    initScore();
+    //Se inicia la musica de fondo
+    initBackgroundMusicPlayer();
+    //Se inician los timers
+    initTimers();
+}
 
-    //Se crea un timer para actualizaar el score
-    QTimer* scoreTimer = new QTimer();
-    //Se conecta el timer con la subrutina de actualizar el score
-    connect(scoreTimer, &QTimer::timeout, this, &Game::printScore);
-    scoreTimer->start(25); //Se actualiza cada 25ms
+void Game::initScene()
+{
+    scene = new QGraphicsScene();
+    setScene(scene);
+
+    //Hacer la ventana de un tamanho fijo
+    this->setFixedSize(600,600);
+    scene->setSceneRect(0,0,600,600);
+
+    //Eliminar las scroll bars
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    //Pintar las lineas del centro
+    QGraphicsLineItem* vertical = new QGraphicsLineItem(width()/2,0,width()/2,height());
+    QGraphicsLineItem* horizontal = new QGraphicsLineItem(0,height()/2,width(),height()/2);
+    scene->addItem(vertical);
+    scene->addItem(horizontal);
+
+    //Anhadir los principales actores (centro y jugador)
+    addActors();
+
+    //Mostrar el view
+    show();
+
+}
+
+void Game::addActors()
+{
+    //Crear/ubicar el centro
+    center = new CenterCircle();
+    center->setPos(width()/2 - center->rect().width()*1.1, height()/2 - center->rect().height()*1.1);
+    scene->addItem(center);
+
+    //Crear/ubicar el jugador
+    player = new Player(width()/2 - playerRadius/2, height()/2 - playerRadius/2);
+    scene->addItem(player);
+
+    //Crear/ubicar el score
+    score = new QGraphicsTextItem();
+    scene->addItem(score);
+
+    //Hacer el jugador focusable (para que reaccione a los key press)
+    player->setFlag(QGraphicsItem::ItemIsFocusable);
+    player->setFocus();
+}
+
+void Game::initTimers()
+{
+    //Se crea un timer para actualizar el score
+    scoreTimer = new QTimer();
+
+    //Se crea un timer para generar enemigos
+    spawnTimer = new QTimer();
+
+    //Se crea un timer para la musica de fondo
+    musicTimer = new QTimer();
+
+    //Se asgina a los timers sus intervalos de actualizacion
+    scoreTimer->start(25); //Cada 25ms
+    spawnTimer->start(spawnrate); //Dado en ms.
+    musicTimer->start(219000); //Cada vez que se acaba la musica, se vuelve a poner (loop)
+
+
+    //Se conectan los timers a sus subrutinas respectivas
+    QObject::connect(spawnTimer, &QTimer::timeout, this, &Game::spawnEnemy);
+    QObject::connect(scoreTimer, &QTimer::timeout, this, &Game::printScore);
+    QObject::connect(musicTimer, &QTimer::timeout, this, &Game::playBackgroundMusic);
+}
+
+void Game::initScore()
+{
     //Se establece el font y color del score
-    setDefaultTextColor(Qt::magenta);
-    setFont(QFont("Helvetica",16));
-    setTextWidth(200);
+    score->setDefaultTextColor(Qt::magenta);
+    score->QGraphicsTextItem::setFont(QFont("Helvetica",16));
+    score->setTextWidth(200);
+}
 
-    //Background music
-    QMediaPlayer* music = new QMediaPlayer();
-    music->setMedia(QUrl("qrc:/music/Audio/music/New World.mp3"));
-    music->play();
+void Game::initBackgroundMusicPlayer()
+{
+    backgroundMusic = new QMediaPlayer();
+    backgroundMusic->setMedia(QUrl("qrc:music/New World.mp3"));
+    //Play (Loop con su timer)
+    playBackgroundMusic();
+}
+
+void Game::playBackgroundMusic()
+{
+    backgroundMusic->play();
 }
 
 void Game::spawnEnemy()
 {
-    float angle = rand() % 3600;
+    float angle = rand() % 360*16;
     Enemy* newEnemy = new Enemy(angle, playerScore, playerLost);
-    scene()->addItem(newEnemy);
-}
-
-void Game::increaseScore()
-{
-    ++playerScore;
+    scene->addItem(newEnemy);
 }
 
 void Game::printScore()
 {
-    setPlainText("Score : " + QString::number(playerScore)); //Se inicia en 0
-    setPos(scene()->width()/2 - (textWidth()/3), scene()->height()/8);
+    score->setPlainText("Score : " + QString::number(playerScore)); //Se inicia en 0
+    score->setPos(scene->width()/2 - (score->textWidth()/3), scene->height()/8);
 }

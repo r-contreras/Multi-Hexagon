@@ -5,11 +5,9 @@
 class CenterCircle : public QGraphicsEllipseItem
 {
 public:
-    CenterCircle()
-    {
-        this->setRect(30,30,50,50);
-    }
+    CenterCircle();
 
+    friend class Enemy;
 };
 
 #endif // CENTERCIRCLE_H

@@ -1,6 +1,5 @@
 #include "enemy.h"
 //quitar este include
-#include <QDebug>
 Enemy::Enemy(int angle, int& playerScore, bool& playerLost) : speed(2), playerScore(playerScore), playerLost(playerLost)
 {
     this->setRect(0,0,600,600);
@@ -19,11 +18,11 @@ void Enemy::resize()
     this->setRect(0,0,rect().height()-speed,rect().width()-speed);
     this->setPos(this->x()+speed/2,this->y()+speed/2);
 
-
     //Se elimina cuando su radio sea menor a 50.
     if(rect().height() <= 50){
         ++playerScore;
         delete this;
+        return;
     }
 
     //Si choca con el jugador entonces se pierde el juego
@@ -38,9 +37,8 @@ void Enemy::resize()
                 playerLost = true;
                 //Play death sound
                 QMediaPlayer* death = new QMediaPlayer();
-                death->setMedia(QUrl("qrc:/soundEffects/Audio/player/deathSoundEffect.mp3"));
+                death->setMedia(QUrl("qrc:/soundEffects/deathSoundEffect.mp3"));
                 death->play();
-
                 delete colliding_items[object];
                 delete this;
             }
