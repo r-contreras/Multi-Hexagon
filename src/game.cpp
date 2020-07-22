@@ -1,11 +1,13 @@
 #include "game.h"
-#include <QDebug>
 Game::Game()
     : scene(nullptr)
     , center(nullptr), player(nullptr)
     , spawnTimer(nullptr), scoreTimer(nullptr), enemiesRandomnessUpdater(nullptr), musicTimer(nullptr)
     , backgroundMusic(nullptr)
-{}
+{
+    //seed
+    std::srand (time(NULL));
+}
 
 Game::~Game()
 {
@@ -92,7 +94,7 @@ void Game::initTimers()
     enemiesRandomnessUpdater = new QTimer();
 
     //Since it will be called after 10 seconds, we create a random closing speed at run.
-    enemiesClosingSpeed = (rand() % 10) + 4;
+    enemiesClosingSpeed = lastClosingSpeed = (rand() % 10) + 5;
 
     //Create a timer for background music
     musicTimer = new QTimer();
@@ -114,8 +116,19 @@ void Game::initTimers()
 
 void Game::updateEnemiesRandomness()
 {
-    enemiesClosingSpeed = (rand() % 10) + 4;
-    spawnTimer->start( (rand() % 500)+ 500);
+    int spawnIntervals[] = {1000,1250,1500};
+
+    spawnTimer->start( spawnIntervals[rand()%3]);
+
+    int newClonsingSpeed = (rand() % 10) + 10;
+    if( newClonsingSpeed - 1 < lastClosingSpeed)
+    {
+        enemiesClosingSpeed = lastClosingSpeed = lastClosingSpeed -1 ;
+    }
+    else
+    {
+        enemiesClosingSpeed = lastClosingSpeed = newClonsingSpeed;
+    }
 }
 
 void Game::initScore()

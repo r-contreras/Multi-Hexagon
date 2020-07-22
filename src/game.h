@@ -44,6 +44,7 @@ private:
     //spawn rate
     int spawnrate = 1000; //given in ms
     int enemiesClosingSpeed; //enemies closing speed
+    int lastClosingSpeed;
 
     friend class Enemy; //Enemies stop spawn timer, needs to know if it collides with player to update de lost boolean
 

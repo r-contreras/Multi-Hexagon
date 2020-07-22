@@ -15,11 +15,11 @@ private:
     //Player's initial position
     float posX,posY;
     //Current player rotation angle (16ns of degree)
-    float angle;
+    float angle = -20.37f;
     //Player's offset from inital position
     int offset = 30;
     //Players rotating speed
-    float speed = 0.05f;
+    float speed = 0.04f;
     //Player's is moving boolean
     bool isMoving = false;
     //Player's moving direction

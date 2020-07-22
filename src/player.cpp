@@ -1,14 +1,14 @@
 #include "player.h"
 
 Player::Player(float posX, float posY)
-    : posX(posX),posY(posY),angle(-20)
+    : posX(posX),posY(posY)
 {
     this->setRect(posX,posY,10,10);
     setPos(offset*qCos(angle),offset*qSin(angle));
     this->setSpanAngle(360*16);
 
     //Timer for updating playerMovement
-    startTimer(10);
+    startTimer(8);
 }
 
 void Player::keyPressEvent(QKeyEvent *event)
