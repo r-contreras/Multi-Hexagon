@@ -22,25 +22,30 @@ class Game : public QGraphicsView
 private:
     //Scene
     QGraphicsScene* scene;
+    //Scene variables
+    int screenWidth = 800;
+    int screenHeight = 800;
     //Main Actors (QGraphicItems)
     CenterCircle* center;
     Player* player;
     //Timers
     QTimer* spawnTimer;
     QTimer* scoreTimer;
+    QTimer* enemiesRandomnessUpdater;
     QTimer* musicTimer;
     //Mediaplayer
     QMediaPlayer* backgroundMusic;
     //player variables
-    bool playerLost;
-    int playerRadius;
+    bool playerLost = false;
+    int playerRadius = 10;
     //player score
     QGraphicsTextItem* scoreTextBox;
-    int playerScore;
+    int playerScore = 0;
     //spawn rate
-    int spawnrate;
+    int spawnrate = 1000; //given in ms
+    int enemiesClosingSpeed; //enemies closing speed
 
-    friend class Enemy; //Modifies spawn timer, needs to know if it collides with player to update de lost boolean
+    friend class Enemy; //Enemies stop spawn timer, needs to know if it collides with player to update de lost boolean
 
 public:
     Game();
@@ -55,6 +60,8 @@ public:
 
     void initTimers();
 
+    void updateEnemiesRandomness();
+
     void initScore();
 
     void initBackgroundMusicPlayer();
@@ -66,6 +73,8 @@ public:
     void updateScore(); //Updates current score value
 
     void displayLostMessage();
+
+
 };
 
 #endif // GAME_H

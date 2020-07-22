@@ -1,37 +1,30 @@
 #include "enemy.h"
 //quitar este include
-Enemy::Enemy(int angle, int& playerScore, bool& playerLost) : internalTimer(nullptr), speed(2), playerScore(playerScore), playerLost(playerLost)
+Enemy::Enemy(int closingSpeed, int width, int height, int angle, int& playerScore, bool& playerLost) : closingSpeed(closingSpeed), playerScore(playerScore), playerLost(playerLost)
 {
-    this->setRect(0,0,600,600);
+    this->setRect(0,0,width,height);
     this->setStartAngle(angle);
     this->setSpanAngle(315*16);
 
-    //Conectar al timer
-    internalTimer = new QTimer();
-    connect(internalTimer,&QTimer::timeout,this,&Enemy::resize);
-    internalTimer->start(5);
+    startTimer(closingSpeed);
 }
 
-Enemy::~Enemy()
+void Enemy::timerEvent(QTimerEvent *event)
 {
-    delete internalTimer;
-}
+    Q_UNUSED(event);
+    //Reduces ellipse size
+    this->setRect(0,0,rect().height()-2,rect().width()-2);
+    this->setPos(this->x()+1,this->y()+1);
 
-void Enemy::resize()
-{
-    //Se reduce el tamanho del circulo.
-    this->setRect(0,0,rect().height()-speed,rect().width()-speed);
-    this->setPos(this->x()+speed/2,this->y()+speed/2);
-
-    //Se elimina cuando su radio sea menor a 50.
+    //Destroys itslef when it reaches a radius of 50
     if(rect().height() <= 50){
         ++playerScore;
         delete this;
         return;
     }
 
-    //Si choca con el jugador entonces se pierde el juego
-    if(rect().height() == 60) //El radio del circulo
+    //If it collides with the player, the player loses
+    if(rect().height() <= 60) //Player radius
     {
         QList<QGraphicsItem*> colliding_items = collidingItems();
 

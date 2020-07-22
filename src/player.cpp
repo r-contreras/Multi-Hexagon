@@ -1,16 +1,14 @@
 #include "player.h"
 
 Player::Player(float posX, float posY)
-    : moveUpdater(nullptr), posX(posX),posY(posY),angle(-20)
+    : posX(posX),posY(posY),angle(-20)
 {
     this->setRect(posX,posY,10,10);
     setPos(offset*qCos(angle),offset*qSin(angle));
     this->setSpanAngle(360*16);
 
     //Timer for updating playerMovement
-    moveUpdater = new QTimer();
-    connect(moveUpdater, &QTimer::timeout, this, &Player::updateMovement);
-    moveUpdater->start(10); //Se actualiza cada 5ms
+    startTimer(10);
 }
 
 void Player::keyPressEvent(QKeyEvent *event)
@@ -38,8 +36,9 @@ void Player::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-void Player::updateMovement()
+void Player::timerEvent(QTimerEvent *event)
 {
+    Q_UNUSED(event);
     if(isMoving)
     {
         angle+= moveDirection * speed;

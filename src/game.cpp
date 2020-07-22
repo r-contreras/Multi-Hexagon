@@ -1,12 +1,10 @@
 #include "game.h"
-
+#include <QDebug>
 Game::Game()
     : scene(nullptr)
     , center(nullptr), player(nullptr)
-    , spawnTimer(nullptr), scoreTimer(nullptr), musicTimer(nullptr)
+    , spawnTimer(nullptr), scoreTimer(nullptr), enemiesRandomnessUpdater(nullptr), musicTimer(nullptr)
     , backgroundMusic(nullptr)
-    , playerLost(false)
-    , playerRadius(10), playerScore(0), spawnrate(1000)
 {}
 
 Game::~Game()
@@ -16,19 +14,20 @@ Game::~Game()
     delete player;
     delete spawnTimer;
     delete scoreTimer;
+    delete enemiesRandomnessUpdater;
     delete musicTimer;
     delete backgroundMusic;
 }
 
 void Game::run()
 {
-    //Se inicia la escena
+    //Initialize scene
     initScene();
-    //Se inicia el score (font,size,width)
+    //initialize score text box (font,size,width)
     initScore();
-    //Se inicia la musica de fondo
+    //Initialize background music
     initBackgroundMusicPlayer();
-    //Se inician los timers
+    //Initialize timers
     initTimers();
 }
 
@@ -37,11 +36,11 @@ void Game::initScene()
     scene = new QGraphicsScene();
     setScene(scene);
 
-    //Hacer la ventana de un tamanho fijo
-    this->setFixedSize(600,600);
-    scene->setSceneRect(0,0,600,600);
+    //Set a fixed size for both the scene and viewer
+    this->setFixedSize(screenWidth,screenHeight);
+    scene->setSceneRect(0,0,screenWidth,screenHeight);
 
-    //Eliminar las scroll bars
+    //Eliminate scroll bars
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -53,55 +52,70 @@ void Game::initScene()
     scene->addItem(horizontal);
     */
 
-    //Anhadir los principales actores (centro y jugador)
+    //Add main actors (center circle and player)
     addActors();
 
-    //Mostrar el view
+    //Show scene view
     show();
 
 }
 
 void Game::addActors()
 {
-    //Crear/ubicar el centro
+    //Create/locate center circle
     center = new CenterCircle();
     center->setPos(width()/2 - center->rect().width()*1.1, height()/2 - center->rect().height()*1.1);
     scene->addItem(center);
 
-    //Crear/ubicar el jugador
+    //Create/locate player
     player = new Player(width()/2 - playerRadius/2, height()/2 - playerRadius/2);
     scene->addItem(player);
 
-    //Crear/ubicar el score
+    //Create/locate score text box
     scoreTextBox = new QGraphicsTextItem();
     scene->addItem(scoreTextBox);
 
-    //Hacer el jugador focusable (para que reaccione a los key press)
+    //Make player focusable (react to key presses)
     player->setFlag(QGraphicsItem::ItemIsFocusable);
     player->setFocus();
 }
 
 void Game::initTimers()
 {
-    //Se crea un timer para actualizar el score
+    //Create a timer to update score
     scoreTimer = new QTimer();
 
-    //Se crea un timer para generar enemigos
+    //Create a timer for spawn
     spawnTimer = new QTimer();
 
-    //Se crea un timer para la musica de fondo
+    //Start closing speed variation
+    enemiesRandomnessUpdater = new QTimer();
+
+    //Since it will be called after 10 seconds, we create a random closing speed at run.
+    enemiesClosingSpeed = (rand() % 10) + 4;
+
+    //Create a timer for background music
     musicTimer = new QTimer();
 
-    //Se asgina a los timers sus intervalos de actualizacion
-    scoreTimer->start(25); //Cada 25ms
-    spawnTimer->start(spawnrate); //Dado en ms.
-    musicTimer->start(219000); //Cada vez que se acaba la musica, se vuelve a poner (loop)
+    //Assign updating intervals
+    scoreTimer->start(10); //Every 10ms
+    spawnTimer->start(spawnrate); //In milisenconds.
+    enemiesRandomnessUpdater->start(10000); //Every 10 seconds
+    musicTimer->start(219000); //Loop music
 
 
-    //Se conectan los timers a sus subrutinas respectivas
+
+    //Connect every timer to their respective update methods
     QObject::connect(spawnTimer, &QTimer::timeout, this, &Game::spawnEnemy);
     QObject::connect(scoreTimer, &QTimer::timeout, this, &Game::updateScore);
+    QObject::connect(enemiesRandomnessUpdater, &QTimer::timeout, this, &Game::updateEnemiesRandomness);
     QObject::connect(musicTimer, &QTimer::timeout, this, &Game::playBackgroundMusic);
+}
+
+void Game::updateEnemiesRandomness()
+{
+    enemiesClosingSpeed = (rand() % 10) + 4;
+    spawnTimer->start( (rand() % 500)+ 500);
 }
 
 void Game::initScore()
@@ -118,7 +132,8 @@ void Game::initBackgroundMusicPlayer()
 {
     backgroundMusic = new QMediaPlayer();
     backgroundMusic->setMedia(QUrl("qrc:music/New World.mp3"));
-    //Play (Loop con su timer)
+
+    //Play music(Loop with its timer)
     playBackgroundMusic();
 }
 
@@ -129,27 +144,30 @@ void Game::playBackgroundMusic()
 
 void Game::spawnEnemy()
 {
-    float angle = rand() % 360*16;
-    Enemy* newEnemy = new Enemy(angle, playerScore, playerLost);
+    float angle = rand() % 360*16; //random aperture angle (not aperture size, but where it will be)
+
+    Enemy* newEnemy = new Enemy(enemiesClosingSpeed, screenWidth, screenHeight, angle, playerScore, playerLost);
     scene->addItem(newEnemy);
 }
 
 void Game::updateScore()
 {
-    scoreTextBox->setPlainText("Score : " + QString::number(playerScore)); //Se inicia en 0
+    scoreTextBox->setPlainText("Score : " + QString::number(playerScore)); //initializes in 0
     scoreTextBox->setPos(scene->width()/2 - (scoreTextBox->textWidth()/4), scene->height()/8);
 
     if(playerLost)
     {
-        //Parar los timers
+        //Stop timers
         scoreTimer->stop();
         spawnTimer->stop();
-        //Parar la musica
+        enemiesRandomnessUpdater->stop();
+        musicTimer->stop();
+        //Stop music
         backgroundMusic->stop();
         displayLostMessage();
-        //Escribir Lost
+        //Display Score;
         scoreTextBox->setDefaultTextColor(Qt::red);
-        scoreTextBox->setPlainText("You Lost");
+        scoreTextBox->setPlainText("You Lost\nScore: "+ QString::number(playerScore));
 
     }
 }
