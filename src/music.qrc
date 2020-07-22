@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/music">
+        <file>Audio/music/New World.mp3</file>
+    </qresource>
+    <qresource prefix="/soundEffects">
+        <file>Audio/player/deathSoundEffect.mp3</file>
+    </qresource>
+</RCC>
