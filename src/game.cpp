@@ -37,6 +37,7 @@ void Game::initScene()
 {
     scene = new QGraphicsScene();
     setScene(scene);
+    scene->setBackgroundBrush(Qt::black);
 
     //Set a fixed size for both the scene and viewer
     this->setFixedSize(screenWidth,screenHeight);
@@ -116,11 +117,11 @@ void Game::initTimers()
 
 void Game::updateEnemiesRandomness()
 {
-    int spawnIntervals[] = {1000,1250,1500};
+    int spawnIntervals[] = {750,1000,1250,1500};
 
     spawnTimer->start( spawnIntervals[rand()%3]);
 
-    int newClonsingSpeed = (rand() % 10) + 10;
+    int newClonsingSpeed = (rand() % 10) + 3;
     if( newClonsingSpeed - 1 < lastClosingSpeed)
     {
         enemiesClosingSpeed = lastClosingSpeed = lastClosingSpeed -1 ;

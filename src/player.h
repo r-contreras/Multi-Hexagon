@@ -7,6 +7,7 @@
 #include <QKeyEvent>
 #include <QtMath>
 #include <QObject>
+#include <QPainter>
 
 class Player : public QObject, public QGraphicsEllipseItem
 {
@@ -32,6 +33,8 @@ public:
     void keyReleaseEvent(QKeyEvent* event) override;
 
     void timerEvent(QTimerEvent *event) override;
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
 };
 
 #endif // PLAYER_H

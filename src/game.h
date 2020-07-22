@@ -8,6 +8,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QMediaPlayer>
+#include <QPainter>
 #include <QString>
 #include <QTimer>
 //Proyect headers

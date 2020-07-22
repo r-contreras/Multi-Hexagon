@@ -1,12 +1,19 @@
 #include "enemy.h"
+
 //quitar este include
 Enemy::Enemy(int closingSpeed, int width, int height, int angle, int& playerScore, bool& playerLost) : closingSpeed(closingSpeed), playerScore(playerScore), playerLost(playerLost)
 {
     this->setRect(0,0,width,height);
     this->setStartAngle(angle);
-    this->setSpanAngle(315*16);
+    this->setSpanAngle(300*16);
 
     startTimer(closingSpeed);
+
+    //Set random color and its width
+    color = QPen(QColor::colorNames()[rand() % QColor::colorNames().size()]);
+    if(color.color() == Qt::black)
+        color.setColor(Qt::white);
+    color.setWidth(2);
 }
 
 void Enemy::timerEvent(QTimerEvent *event)
@@ -43,4 +50,12 @@ void Enemy::timerEvent(QTimerEvent *event)
             }
         }
     }
+}
+
+void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setPen(this->color);
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->drawArc(this->rect(),startAngle(),spanAngle());
+
 }

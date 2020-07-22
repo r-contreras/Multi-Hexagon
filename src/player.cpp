@@ -9,6 +9,7 @@ Player::Player(float posX, float posY)
 
     //Timer for updating playerMovement
     startTimer(8);
+
 }
 
 void Player::keyPressEvent(QKeyEvent *event)
@@ -48,4 +49,12 @@ void Player::timerEvent(QTimerEvent *event)
 
         this->setPos(offset*qCos(angle),offset*qSin(angle));
     }
+}
+
+void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    QBrush brush(Qt::white);
+    painter->setBrush(brush);
+    painter->setRenderHint(QPainter::Antialiasing);
+    painter->drawEllipse(this->rect());
 }
