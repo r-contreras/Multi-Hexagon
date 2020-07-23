@@ -2,5 +2,6 @@
     <qresource prefix="/entities"/>
     <qresource prefix="/">
         <file>hexaIcon.jpg</file>
+        <file>BackIH.png</file>
     </qresource>
 </RCC>
