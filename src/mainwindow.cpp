@@ -39,5 +39,6 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
     Game* game = new Game();
+    game->setFocus();
     game->run();
 }
