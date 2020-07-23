@@ -28,6 +28,8 @@ private:
 public:
     Player(float posX,float posY);
 
+    void stopMovement();
+
     void keyPressEvent(QKeyEvent* event) override;
 
     void keyReleaseEvent(QKeyEvent* event) override;

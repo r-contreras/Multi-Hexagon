@@ -44,7 +44,7 @@ void Enemy::timerEvent(QTimerEvent *event)
                 QMediaPlayer* death = new QMediaPlayer();
                 death->setMedia(QUrl("qrc:/soundEffects/deathSoundEffect.mp3"));
                 death->play();
-                delete colliding_items[object];
+                scene()->removeItem(colliding_items[object]);
                 delete this;
 
             }

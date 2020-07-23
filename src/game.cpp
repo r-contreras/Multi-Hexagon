@@ -1,9 +1,8 @@
 #include "game.h"
-#include <QMessageBox>
 
-Game::Game(MainWindow &main)
-    : scene(nullptr)
-    , mainWindow(main)
+Game::Game(MainWindow* parentWindow)
+    : parentWindow(parentWindow)
+    , scene(nullptr)
     , center(nullptr), player(nullptr)
     , spawnTimer(nullptr), scoreTimer(nullptr), enemiesRandomnessUpdater(nullptr), musicTimer(nullptr)
     , backgroundMusic(nullptr)
@@ -34,6 +33,8 @@ void Game::run()
     initBackgroundMusicPlayer();
     //Initialize timers
     initTimers();
+    //Initialize buttons
+    initButtons();
 }
 
 void Game::initScene()
@@ -49,14 +50,6 @@ void Game::initScene()
     //Eliminate scroll bars
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    /*
-    //Pintar las lineas del centro
-    QGraphicsLineItem* vertical = new QGraphicsLineItem(width()/2,0,width()/2,height());
-    QGraphicsLineItem* horizontal = new QGraphicsLineItem(0,height()/2,width(),height()/2);
-    scene->addItem(vertical);
-    scene->addItem(horizontal);
-    */
 
     //Add main actors (center circle and player)
     addActors();
@@ -94,27 +87,30 @@ void Game::initTimers()
     //Create a timer for spawn
     spawnTimer = new QTimer();
 
-    //Start closing speed variation
+    //Create a timer for closing speed variation
     enemiesRandomnessUpdater = new QTimer();
 
-    //Since it will be called after 10 seconds, we create a random closing speed at run.
-    enemiesClosingSpeed = lastClosingSpeed = 5;
     //Create a timer for background music
     musicTimer = new QTimer();
-
-    //Assign updating intervals
-    scoreTimer->start(10); //Every 10ms
-    spawnTimer->start(spawnrate); //In milisenconds.
-    enemiesRandomnessUpdater->start(10000); //Every 10 seconds
-    musicTimer->start(219000); //Loop music
-
-
 
     //Connect every timer to their respective update methods
     QObject::connect(spawnTimer, &QTimer::timeout, this, &Game::spawnEnemy);
     QObject::connect(scoreTimer, &QTimer::timeout, this, &Game::updateScore);
     QObject::connect(enemiesRandomnessUpdater, &QTimer::timeout, this, &Game::updateEnemiesRandomness);
     QObject::connect(musicTimer, &QTimer::timeout, this, &Game::playBackgroundMusic);
+
+    runTimers();
+}
+
+void Game::runTimers()
+{
+    //Since it will be called after 10 seconds, we create a random closing speed at run.
+    enemiesClosingSpeed = lastClosingSpeed = 5;
+    //Assign updating intervals
+    scoreTimer->start(10); //Every 10ms
+    spawnTimer->start(spawnrate); //In milisenconds.
+    enemiesRandomnessUpdater->start(10000); //Every 10 seconds
+    musicTimer->start(219000); //Loop music
 }
 
 void Game::updateEnemiesRandomness()
@@ -138,10 +134,35 @@ void Game::initScore()
 {
     //Se establece el font y color del score
     scoreTextBox->setDefaultTextColor(QColor(245,185,103));
-    QFont font("Helvetica",16);
+    QFont font("Helvetica [Cronyx]",16);
     font.setCapitalization(QFont::AllUppercase);
+    font.setStyle(QFont::StyleOblique);
+    font.setWeight(QFont::DemiBold);
+    font.setStyleStrategy(QFont::PreferAntialias);
     scoreTextBox->setFont(font);
     scoreTextBox->setTextWidth(200);
+}
+
+void Game::initButtons()
+{
+    //Create botons
+    retryButton = new QPushButton("Retry",this);
+    menuButton = new QPushButton("Main Menu",this);
+    //Set button font
+    retryButton->setFont(QFont("Helvetica [Cronyx]",20,QFont::DemiBold,true));
+    menuButton->setFont(QFont("Helvetica [Cronyx]",20,QFont::DemiBold,true));
+    //Set flags
+    retryButton->setFlat(true);
+    menuButton->setFlat(true);
+    //Change styles
+    retryButton->setStyleSheet("QPushButton {background-color: #000000; color: white; border:  none}");
+    menuButton->setStyleSheet("QPushButton {background-color: #000000; color: white; border:  none}");
+    //Set button dimensions
+    retryButton->setGeometry(QRect(rect().width()/2 - retryButton->rect().width()/2,2*rect().height()/3,100,30));
+    menuButton->setGeometry(QRect(rect().width()/2 - (menuButton->rect().width()/2)-25,2*(rect().height()+70)/3,150,30));
+    //Connect buttons to their methods
+    QObject::connect(retryButton,&QPushButton::clicked,this,&Game::restartGame);
+    QObject::connect(menuButton,&QPushButton::clicked,this,&Game::endGame);
 }
 
 void Game::initBackgroundMusicPlayer()
@@ -180,26 +201,43 @@ void Game::updateScore()
         musicTimer->stop();
         //Stop music
         backgroundMusic->stop();
-        displayLostMessage();
+        //Stop player movement
+        player->stopMovement();
         //Display Score;
         scoreTextBox->setDefaultTextColor(Qt::red);
-        scoreTextBox->setPlainText("You Lost\nScore: "+ QString::number(playerScore));
-
+        scoreTextBox->setPlainText("You Lost!\nScore: "+ QString::number(playerScore));
+        //Display message in 500ms
+        QTimer::singleShot(1000,this,&Game::displayLostMessage);
+        this->setFocus();
     }
+}
+
+void Game::restartGame()
+{
+    //Hide buttons
+    retryButton->hide();
+    menuButton->hide();
+    //Restart values
+    playerLost = 0;
+    playerScore = 0;
+    //Restart timers
+    scene->addItem(player);
+    player->setFocus();
+    runTimers();
+    playBackgroundMusic();
+    //Reset Score color
+    scoreTextBox->setDefaultTextColor(QColor(245,185,103));
+}
+
+void Game::endGame()
+{
+    this->close();
+    parentWindow->show();
 }
 
 void Game::displayLostMessage()
 {
-    //rip
-    QMessageBox::StandardButton reply =
-            QMessageBox::question(this, "Ops!",
-                                  "You've lost!\nYour score is: "+ QString::number(playerScore)+
-                                  "\nDo you want to try again?",
-                                  QMessageBox::Yes | QMessageBox::No);
-    if( reply == QMessageBox::Yes ){
-        //reset();
-    }else{
-        this->close();
-        mainWindow.show();
-    }
+    //Add buttons to the scene
+    retryButton->show();
+    menuButton->show();
 }

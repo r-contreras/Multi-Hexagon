@@ -12,6 +12,11 @@ Player::Player(float posX, float posY)
 
 }
 
+void Player::stopMovement()
+{
+    this->isMoving = false;
+}
+
 void Player::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_Left)

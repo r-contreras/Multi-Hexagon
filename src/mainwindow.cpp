@@ -44,7 +44,7 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
     this->hide();
-    Game* game = new Game(*this);
+    Game* game = new Game(this);
     game->setFocus();
     game->run();
 }

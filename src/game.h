@@ -3,26 +3,30 @@
 //Std
 #include <stdlib.h>
 //Qt
+#include <QPushButton>
+#include <QToolButton>
 #include <QFont>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QMediaPlayer>
+#include <QMessageBox>
 #include <QPainter>
 #include <QString>
 #include <QTimer>
 //Proyect headers
 #include "centercircle.h"
 #include "enemy.h"
+#include "mainwindow.h"
 #include "player.h"
 
-#include "mainwindow.h"
 
 class Game : public QGraphicsView
 {
     Q_OBJECT //Se necesita este macro para enlazar los timers con las subrutinas
 
 private:
+    MainWindow* parentWindow;
     //Scene
     QGraphicsScene* scene;
     //Scene variables
@@ -36,6 +40,9 @@ private:
     QTimer* scoreTimer;
     QTimer* enemiesRandomnessUpdater;
     QTimer* musicTimer;
+    //Buttons
+    QPushButton* retryButton;
+    QPushButton* menuButton;
     //Mediaplayer
     QMediaPlayer* backgroundMusic;
     //player variables
@@ -49,12 +56,10 @@ private:
     int enemiesClosingSpeed; //enemies closing speed
     int lastClosingSpeed;
 
-    MainWindow& mainWindow;
-
     friend class Enemy; //Enemies stop spawn timer, needs to know if it collides with player to update de lost boolean
 
 public:
-    Game( MainWindow& mainWindow );
+    Game( MainWindow* parentWindow = nullptr);
 
     ~Game();
 
@@ -66,9 +71,13 @@ public:
 
     void initTimers();
 
+    void runTimers();
+
     void updateEnemiesRandomness();
 
     void initScore();
+
+    void initButtons();
 
     void initBackgroundMusicPlayer();
 
@@ -77,6 +86,10 @@ public:
     void spawnEnemy(); //Spawns one enemy into the scene
 
     void updateScore(); //Updates current score value
+
+    void restartGame();
+
+    void endGame();
 
     void displayLostMessage();
 
