@@ -1,5 +1,9 @@
 #include "game.h"
-
+/**
+ * @brief Construct a new Game:: Game object
+ * 
+ * @param parentWindow Parent window
+ */
 Game::Game(MainWindow* parentWindow)
     : parentWindow(parentWindow)
     , scene(nullptr)
@@ -10,7 +14,10 @@ Game::Game(MainWindow* parentWindow)
     //seed
     std::srand (time(NULL));
 }
-
+/**
+ * @brief Destroy the Game:: Game object
+ * 
+ */
 Game::~Game()
 {
     delete scene;
@@ -22,7 +29,10 @@ Game::~Game()
     delete musicTimer;
     delete backgroundMusic;
 }
-
+/**
+ * @brief Runs the game
+ * 
+ */
 void Game::run()
 {
     //Initialize scene
@@ -36,7 +46,10 @@ void Game::run()
     //Initialize buttons
     initButtons();
 }
-
+/**
+ * @brief Initializes game scene
+ * 
+ */
 void Game::initScene()
 {
     scene = new QGraphicsScene();
@@ -58,7 +71,10 @@ void Game::initScene()
     show();
 
 }
-
+/**
+ * @brief Adds main actors to the game scene
+ * 
+ */
 void Game::addActors()
 {
     //Create/locate center circle
@@ -78,7 +94,10 @@ void Game::addActors()
     player->setFlag(QGraphicsItem::ItemIsFocusable);
     player->setFocus();
 }
-
+/**
+ * @brief Initializes timers
+ * 
+ */
 void Game::initTimers()
 {
     //Create a timer to update score
@@ -101,7 +120,10 @@ void Game::initTimers()
 
     runTimers();
 }
-
+/**
+ * @brief Runs initialized timers
+ * 
+ */
 void Game::runTimers()
 {
     //Since it will be called after 10 seconds, we create a random closing speed at run.
@@ -112,7 +134,10 @@ void Game::runTimers()
     enemiesRandomnessUpdater->start(10000); //Every 10 seconds
     musicTimer->start(219000); //Loop music
 }
-
+/**
+ * @brief Updates randomness of Enemies
+ * 
+ */
 void Game::updateEnemiesRandomness()
 {
     int spawnIntervals[] = {500,750,1000,1250,1500};
@@ -129,7 +154,10 @@ void Game::updateEnemiesRandomness()
         enemiesClosingSpeed = lastClosingSpeed = newClonsingSpeed;
     }
 }
-
+/**
+ * @brief Initializes score text box
+ * 
+ */
 void Game::initScore()
 {
     //Se establece el font y color del score
@@ -142,7 +170,10 @@ void Game::initScore()
     scoreTextBox->setFont(font);
     scoreTextBox->setTextWidth(200);
 }
-
+/**
+ * @brief Initializes player lost screen buttons
+ * 
+ */
 void Game::initButtons()
 {
     //Create botons
@@ -164,7 +195,10 @@ void Game::initButtons()
     QObject::connect(retryButton,&QPushButton::clicked,this,&Game::restartGame);
     QObject::connect(menuButton,&QPushButton::clicked,this,&Game::endGame);
 }
-
+/**
+ * @brief Initializes background music
+ * 
+ */
 void Game::initBackgroundMusicPlayer()
 {
     backgroundMusic = new QMediaPlayer();
@@ -173,12 +207,18 @@ void Game::initBackgroundMusicPlayer()
     //Play music(Loop with its timer)
     playBackgroundMusic();
 }
-
+/**
+ * @brief Plays the initialized background music
+ * 
+ */
 void Game::playBackgroundMusic()
 {
     backgroundMusic->play();
 }
-
+/**
+ * @brief Spawns an enemy in the scene
+ * 
+ */
 void Game::spawnEnemy()
 {
     float angle = rand() % 360*16; //random aperture angle (not aperture size, but where it will be)
@@ -186,7 +226,10 @@ void Game::spawnEnemy()
     Enemy* newEnemy = new Enemy(enemiesClosingSpeed, screenWidth, screenHeight, angle, playerScore, playerLost);
     scene->addItem(newEnemy);
 }
-
+/**
+ * @brief Updates score text box with current information
+ * 
+ */
 void Game::updateScore()
 {
     scoreTextBox->setPlainText("Score : " + QString::number(playerScore)); //initializes in 0
@@ -211,7 +254,10 @@ void Game::updateScore()
         this->setFocus();
     }
 }
-
+/**
+ * @brief Restarts the game
+ * 
+ */
 void Game::restartGame()
 {
     //Hide buttons
@@ -228,13 +274,19 @@ void Game::restartGame()
     //Reset Score color
     scoreTextBox->setDefaultTextColor(QColor(245,185,103));
 }
-
+/**
+ * @brief Ends the game, window is closed
+ * 
+ */
 void Game::endGame()
 {
     this->close();
     parentWindow->show();
 }
-
+/**
+ * @brief Displays the retry and main menu buttons
+ * 
+ */
 void Game::displayLostMessage()
 {
     //Add buttons to the scene

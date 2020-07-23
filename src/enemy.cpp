@@ -1,6 +1,15 @@
 #include "enemy.h"
 
-//quitar este include
+/**
+ * @brief Construct a new Enemy:: Enemy object
+ * 
+ * @param closingSpeed Circle closing speed
+ * @param width Circle width
+ * @param height Circle height
+ * @param angle Aperture location angle
+ * @param playerScore Player score to be modified
+ * @param playerLost Player boolean to be modified
+ */
 Enemy::Enemy(int closingSpeed, int width, int height, int angle, int& playerScore, bool& playerLost) : closingSpeed(closingSpeed), playerScore(playerScore), playerLost(playerLost)
 {
     this->setRect(0,0,width,height);
@@ -15,7 +24,11 @@ Enemy::Enemy(int closingSpeed, int width, int height, int angle, int& playerScor
         color.setColor(Qt::white);
     color.setWidth(2);
 }
-
+/**
+ * @brief QObject internal timer, used to reduce circles size
+ * 
+ * @param event unused QObject parameter
+ */
 void Enemy::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED(event);
@@ -51,7 +64,13 @@ void Enemy::timerEvent(QTimerEvent *event)
         }
     }
 }
-
+/**
+ * @brief QObject paint function
+ * 
+ * @param painter QPainter to paint QGraphicsItem
+ * @param option unsued parameter
+ * @param widget unsued parameter
+ */
 void Enemy::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(this->color);
