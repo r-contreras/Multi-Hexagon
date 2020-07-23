@@ -4,13 +4,11 @@
 #include <stdlib.h>
 //Qt
 #include <QPushButton>
-#include <QToolButton>
 #include <QFont>
 #include <QGraphicsItem>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QMediaPlayer>
-#include <QMessageBox>
 #include <QPainter>
 #include <QString>
 #include <QTimer>
@@ -23,7 +21,7 @@
 
 class Game : public QGraphicsView
 {
-    Q_OBJECT //Se necesita este macro para enlazar los timers con las subrutinas
+    Q_OBJECT //Needed macro for timers
 
 private:
     MainWindow* parentWindow;

@@ -1,5 +1,8 @@
 <RCC>
-    <qresource prefix="/entities"/>
+    <qresource prefix="/superPowers">
+        <file>superSpeedSuperPowerIcon.png</file>
+        <file>immunitySuperPowerIcon.png</file>
+    </qresource>
     <qresource prefix="/">
         <file>hexaIcon.jpg</file>
     </qresource>

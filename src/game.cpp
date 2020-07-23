@@ -149,8 +149,8 @@ void Game::initButtons()
     retryButton = new QPushButton("Retry",this);
     menuButton = new QPushButton("Main Menu",this);
     //Set button font
-    retryButton->setFont(QFont("Helvetica [Cronyx]",20,QFont::DemiBold,true));
-    menuButton->setFont(QFont("Helvetica [Cronyx]",20,QFont::DemiBold,true));
+    retryButton->setFont(QFont("Helvetica [Cronyx]",16,QFont::DemiBold,true));
+    menuButton->setFont(QFont("Helvetica [Cronyx]",16,QFont::DemiBold,true));
     //Set flags
     retryButton->setFlat(true);
     menuButton->setFlat(true);
@@ -205,7 +205,7 @@ void Game::updateScore()
         player->stopMovement();
         //Display Score;
         scoreTextBox->setDefaultTextColor(Qt::red);
-        scoreTextBox->setPlainText("You Lost!\nScore: "+ QString::number(playerScore));
+        scoreTextBox->setPlainText("Game Over!\nScore: "+ QString::number(playerScore));
         //Display message in 500ms
         QTimer::singleShot(1000,this,&Game::displayLostMessage);
         this->setFocus();

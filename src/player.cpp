@@ -1,7 +1,7 @@
 #include "player.h"
 
 Player::Player(float posX, float posY)
-    : posX(posX),posY(posY)
+    : posX(posX),posY(posY), superPower(nullptr)
 {
     this->setRect(posX,posY,10,10);
     setPos(offset*qCos(angle),offset*qSin(angle));
@@ -30,6 +30,15 @@ void Player::keyPressEvent(QKeyEvent *event)
     {
         isMoving = true;
         moveDirection = 1;
+    }
+
+    if(event->key() == Qt::Key_Space)
+    {
+        if(superPower)
+        {
+            superPower->apply(this);
+            this->superPower = nullptr;
+        }
     }
 
 }
@@ -62,4 +71,31 @@ void Player::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     painter->setBrush(brush);
     painter->setRenderHint(QPainter::Antialiasing);
     painter->drawEllipse(this->rect());
+}
+
+void Player::addSuperPower(SuperPower *newSuperPower)
+{
+    if(this->superPower)
+    {
+        delete this->superPower;
+        this->superPower = newSuperPower;
+    }
+}
+
+void Player::addSpeedSuperPower()
+{
+    this->speed= 0.06f;
+    QTimer::singleShot(5000, this, &Player::removeSuperPower);
+}
+
+void Player::addImmunitySuperPower()
+{
+    this->isImmune = true;
+    QTimer::singleShot(2000, this, &Player::removeSuperPower);
+}
+
+void Player::removeSuperPower()
+{
+    this->speed = 0.04f;
+    this->isImmune = false;
 }

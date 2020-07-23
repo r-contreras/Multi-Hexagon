@@ -5,9 +5,12 @@
 //Qt
 #include <QGraphicsEllipseItem>
 #include <QKeyEvent>
+#include <QTimer>
 #include <QtMath>
 #include <QObject>
 #include <QPainter>
+//Proyect header
+#include "superpower.h"
 
 class Player : public QObject, public QGraphicsEllipseItem
 {
@@ -25,9 +28,13 @@ private:
     bool isMoving = false;
     //Player's moving direction
     int moveDirection = 0;//-1 izquierda, 1 derecha
+    //Super powers
+    SuperPower* superPower;
+    bool isImmune = false;
 public:
     Player(float posX,float posY);
 
+    //Movement/controls
     void stopMovement();
 
     void keyPressEvent(QKeyEvent* event) override;
@@ -37,6 +44,15 @@ public:
     void timerEvent(QTimerEvent *event) override;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = nullptr) override;
+
+    //Super Powers
+    void addSuperPower(SuperPower* newSuperPower);
+
+    void addSpeedSuperPower();
+
+    void addImmunitySuperPower();
+
+    void removeSuperPower();
 };
 
 #endif // PLAYER_H

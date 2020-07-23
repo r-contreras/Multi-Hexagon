@@ -21,17 +21,23 @@ SOURCES += \
     enemy.cpp \
     game.cpp \
     hexagon.cpp \
+    immunitysuperpower.cpp \
     main.cpp \
     mainwindow.cpp \
-    player.cpp
+    player.cpp \
+    speedsuperpower.cpp \
+    superpower.cpp
 
 HEADERS += \
     centercircle.h \
     enemy.h \
     game.h \
     hexagon.h \
+    immunitysuperpower.h \
     mainwindow.h \
-    player.h
+    player.h \
+    speedsuperpower.h \
+    superpower.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
