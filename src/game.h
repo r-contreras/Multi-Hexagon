@@ -16,6 +16,8 @@
 #include "enemy.h"
 #include "player.h"
 
+#include "mainwindow.h"
+
 class Game : public QGraphicsView
 {
     Q_OBJECT //Se necesita este macro para enlazar los timers con las subrutinas
@@ -47,10 +49,12 @@ private:
     int enemiesClosingSpeed; //enemies closing speed
     int lastClosingSpeed;
 
+    MainWindow& mainWindow;
+
     friend class Enemy; //Enemies stop spawn timer, needs to know if it collides with player to update de lost boolean
 
 public:
-    Game();
+    Game( MainWindow& mainWindow );
 
     ~Game();
 

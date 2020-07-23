@@ -1,3 +1,6 @@
 <RCC>
     <qresource prefix="/entities"/>
+    <qresource prefix="/">
+        <file>hexaIcon.jpg</file>
+    </qresource>
 </RCC>

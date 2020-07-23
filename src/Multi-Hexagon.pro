@@ -44,3 +44,5 @@ RESOURCES += \
 
 FORMS += \
     mainwindow.ui
+
+DISTFILES +=

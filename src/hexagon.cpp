@@ -4,7 +4,8 @@ hexagon::hexagon(int& argc, char *argv[])
     :QApplication(argc, argv)
 {
     //Icnono de la aplicacion:
-    //setWindowIcon(QIcon(""));
+    setWindowIcon(QIcon(":/hexaIcon.jpg"));
+
 }
 
 hexagon::~hexagon(){}

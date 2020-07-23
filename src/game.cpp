@@ -1,6 +1,9 @@
 #include "game.h"
-Game::Game()
+#include <QMessageBox>
+
+Game::Game(MainWindow &main)
     : scene(nullptr)
+    , mainWindow(main)
     , center(nullptr), player(nullptr)
     , spawnTimer(nullptr), scoreTimer(nullptr), enemiesRandomnessUpdater(nullptr), musicTimer(nullptr)
     , backgroundMusic(nullptr)
@@ -188,4 +191,15 @@ void Game::updateScore()
 void Game::displayLostMessage()
 {
     //rip
+    QMessageBox::StandardButton reply =
+            QMessageBox::question(this, "Ops!",
+                                  "You've lost!\nYour score is: "+ QString::number(playerScore)+
+                                  "\nDo you want to try again?",
+                                  QMessageBox::Yes | QMessageBox::No);
+    if( reply == QMessageBox::Yes ){
+        //reset();
+    }else{
+        this->close();
+        mainWindow.show();
+    }
 }

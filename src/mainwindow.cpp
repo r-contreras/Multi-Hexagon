@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    setFixedSize(800, 600);
 }
 
 MainWindow::~MainWindow()
@@ -19,8 +19,8 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_3_clicked()
 {
     QMessageBox::StandardButton reply =
-            QMessageBox::question(this, "Salir",
-                                  "Esta seguro que desea salir?",
+            QMessageBox::question(this, "Exit",
+                                  "Are you sure?",
                                   QMessageBox::Yes | QMessageBox::No);
     if( reply == QMessageBox::Yes ){
         QApplication::quit();
@@ -30,15 +30,21 @@ void MainWindow::on_pushButton_3_clicked()
 void MainWindow::on_pushButton_clicked()
 {
     //Se muestra ayuda
-    QMessageBox::about(this,"Instrucciones",
-            "Para jugar Hexagon circular pulsa las flechas para dirigir la cebecilla"
-            " del cursor.\n Evita chocar con los bordes de los circulos hasta alcanzar "
-            "el record que desees!");
+    QMessageBox::about(this,"How to play",
+            "Hexagon is a game that consists in directing the pointer to the missing part"
+            " of the hexagon. This version is called Infinite Hexagon because a polygon with"
+            " infinite sides is a circle (the enemy in this game!)\n"
+            "Use the side arrows on your keyboard to direct the head in the right way."
+            " Avoid touching the circles at all cost or you'll lose!\nWith time it'll get "
+            "harder, but don't give up so soon, good practice makes a master.\n"
+            "Also, you'll encounter special powers that will help you in the game, try "
+            "catching them!\nGood luck and enjoy Infinite Hexagon :)");
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    Game* game = new Game();
+    this->hide();
+    Game* game = new Game(*this);
     game->setFocus();
     game->run();
 }
