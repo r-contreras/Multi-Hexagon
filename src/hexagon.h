@@ -3,7 +3,6 @@
 
 #include "mainwindow.h"
 #include <QApplication>
-
 class hexagon : public QApplication
 {
 private:
