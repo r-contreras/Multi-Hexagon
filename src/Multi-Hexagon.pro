@@ -20,13 +20,17 @@ SOURCES += \
     centercircle.cpp \
     enemy.cpp \
     game.cpp \
+    hexagon.cpp \
     main.cpp \
+    mainwindow.cpp \
     player.cpp
 
 HEADERS += \
     centercircle.h \
     enemy.h \
     game.h \
+    hexagon.h \
+    mainwindow.h \
     player.h
 
 # Default rules for deployment.
@@ -37,3 +41,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     audio.qrc \
     images.qrc
+
+FORMS += \
+    mainwindow.ui
