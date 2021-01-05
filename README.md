@@ -1,5 +1,5 @@
 # Multi-Hexagon
-Open Source Hexagon with a twist.
+Open Source Qt based Super Hexagon with a twist.
 
 ## Super Powers
 Use super powers to achieve a higher score!
