@@ -1,9 +1,6 @@
 # Multi-Hexagon
 Open Source Qt based Super Hexagon with a twist.
 
-## Super Powers
-Use super powers to achieve a higher score!
-
 ## Development:
 - **B96674** Milen Rodríguez
 - **B92277** Rodrigo Contreras
